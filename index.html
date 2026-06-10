@@ -1130,24 +1130,30 @@ window.syncXtream=async function(){
   const btn=$('xt-btn'); btn.disabled=true; btn.textContent='Bağlanıyor...';
   setSyncProg('Sunucuya bağlanıyor...',10);
   try{
+    // Güçlü CORS Proxy'si
+    const proxyPrefix = 'https://corsproxy.io/?';
+
     const authUrl=`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`;
-    const r=await fetch(authUrl); // Doğrudan bağlantı
+    const r=await fetch(proxyPrefix + encodeURIComponent(authUrl));
     if(!r.ok) throw new Error(`Sunucu yanıt vermedi (HTTP ${r.status})`);
     const info=await r.json();
     if(!info.user_info) throw new Error('Geçersiz kullanıcı adı veya şifre');
 
     setSyncProg('Canlı kanallar yükleniyor...',25);
-    const liveR=await fetch(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_live_streams`);
+    const liveUrl = `${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_live_streams`;
+    const liveR=await fetch(proxyPrefix + encodeURIComponent(liveUrl));
     const liveStreams=await liveR.json();
 
     setSyncProg('Filmler yükleniyor...',50);
-    const vodR=await fetch(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_vod_streams`);
+    const vodUrl = `${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_vod_streams`;
+    const vodR=await fetch(proxyPrefix + encodeURIComponent(vodUrl));
     const vodStreams=await vodR.json();
 
     setSyncProg('Diziler yükleniyor...',70);
     let seriesStreams=[];
     try{
-      const serR=await fetch(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_series`);
+      const serUrl = `${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_series`;
+      const serR=await fetch(proxyPrefix + encodeURIComponent(serUrl));
       seriesStreams=await serR.json();
     }catch{}
 
