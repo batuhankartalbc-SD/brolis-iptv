@@ -1132,23 +1132,23 @@ window.syncXtream=async function(){
   try{
     // Account info
     const authUrl=`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`;
-    const r=await fetch('/.netlify/functions/proxy?url='+encodeURIComponent(authUrl));
+    const r=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(authUrl));
     if(!r.ok) throw new Error(`Sunucu yanıt vermedi (HTTP ${r.status})`);
     const info=await r.json();
     if(!info.user_info) throw new Error('Geçersiz kullanıcı adı veya şifre');
 
     setSyncProg('Canlı kanallar yükleniyor...',25);
-    const liveR=await fetch('/.netlify/functions/proxy?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_live_streams`));
+    const liveR=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_live_streams`));
     const liveStreams=await liveR.json();
 
     setSyncProg('Filmler yükleniyor...',50);
-    const vodR=await fetch('/.netlify/functions/proxy?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_vod_streams`));
+    const vodR=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_vod_streams`));
     const vodStreams=await vodR.json();
 
     setSyncProg('Diziler yükleniyor...',70);
     let seriesStreams=[];
     try{
-      const serR=await fetch('/.netlify/functions/proxy?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_series`));
+      const serR=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(`${server}/player_api.php?username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}&action=get_series`));
       seriesStreams=await serR.json();
     }catch{}
 
@@ -1200,7 +1200,7 @@ window.syncM3U=async function(){
   const btn=$('m3u-btn'); btn.disabled=true; btn.textContent='Yükleniyor...';
   setSyncProg('M3U listesi indiriliyor...',15);
   try{
-    const proxyUrl='/.netlify/functions/proxy?url='+encodeURIComponent(url);
+    const proxyUrl='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
     const r=await fetch(proxyUrl);
     if(!r.ok) throw new Error(`HTTP ${r.status} — URL erişilemiyor`);
     const text=await r.text();
